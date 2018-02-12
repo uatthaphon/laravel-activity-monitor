@@ -1,0 +1,47 @@
+{
+    "name": "uatthaphon/laravel-activity-mornitor",
+    "description": "The activity logged to monitor your website",
+    "keywords": ["laravel", "log", "monitor", "acitivty"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Atthaphon Urairat",
+            "email": "u.atthaphon@gmail.com",
+            "homepage": "https://atthaphon.urairat.me/"
+        }
+    ],
+    "require": {
+        "php": "^7.0",
+        "illuminate/config": "~5.5.0|~5.6.0",
+        "illuminate/database": "~5.5.0|~5.6.0",
+        "illuminate/support": "~5.5.0|~5.6.0",
+        "illuminate/http": "^5.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "5.7.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/",
+            "src/database/migrations"
+        ],
+        "psr-4": {
+            "Uatthaphon\\ActivityMonitor\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php"
+        ],
+        "psr-4": {
+            "Uatthaphon\\ActivityMonitor\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Uatthaphon\\ActivityMonitor\\ActivityMonitorServiceProvider"
+            ]
+        }
+    }
+}
