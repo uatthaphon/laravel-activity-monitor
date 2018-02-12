@@ -10,6 +10,8 @@ trait LogHistoryModelEvent
 {
     protected static $oldHistory;
 
+    protected static $isUpdated;
+
     /**
      * Add history data ot oldHistory if updated allowed
      */
@@ -19,6 +21,7 @@ trait LogHistoryModelEvent
             if ($eventName == 'updated') {
                 static::updating(function (Model $model) {
                     static::setOldHistory($model);
+                    static::$isUpdated = true;
                 });
             }
         }
@@ -46,6 +49,10 @@ trait LogHistoryModelEvent
 
     protected static function isSomeChange(Model $model)
     {
+        if (!static::$isUpdated) {
+            return true;
+        }
+
         if (isset(static::$oldHistory)) {
             $history = array_only($model->attributes, static::$loggable);
 

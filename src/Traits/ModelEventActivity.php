@@ -12,6 +12,7 @@ trait ModelEventActivity
     use LogHistoryModelEvent;
 
     private static $description = 'Eloquent models event';
+
     protected static function bootModelEventActivity()
     {
         foreach (static::getModelEvents() as $eventName) {

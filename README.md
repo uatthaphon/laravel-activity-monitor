@@ -1,11 +1,16 @@
-# laravel-thai-address
-Thai provincial database with latitude and longitude.
+# laravel-activity-mornitor
+Activity Monitor Log is an activity logger for monitoring user activity and eloquent models events activity.
+
+> ** **Still In Development** *If you would like to try or love to taking a risk please use this repo now* :speak_no_evil::see_no_evil::hear_no_evil:
+> *Note:*
+> *[1] Right now it only tested on laravel 5.5*
+> *[2] Only Eloquent model events feature tested.*
 
 ## Setup
 Add package dependency to your project
 
 ```bash
-composer require uatthaphon/laravel-thai-address
+composer require uatthaphon/laravel-activity-mornitor
 ```
 
 Before Laravel 5.5, add package's service provider to your project's `config/app.php`
@@ -14,14 +19,15 @@ Before Laravel 5.5, add package's service provider to your project's `config/app
 'providers' => [
   ...
 
-  Uatthaphon\ThaiAddress\ThaiAddressServiceProvider::class,
+  Uatthaphon\ActivityMonitor\ActivityMonitorServiceProvider::class,
 ],
 ```
 
-Run publishing to publish 3 tagging => `migrations` `csv` `seeds`
+
+Run publishing get the database migration
 
 ```bash
-php artisan vendor:publish
+php artisan vendor:publish --tag=migrations
 ```
 
 After all has been published you can create tables by running the migrations
@@ -30,40 +36,60 @@ After all has been published you can create tables by running the migrations
 php artisan migrate
 ```
 
-Then run seeder, it will grab csv and fill them into each tables
-
-```bash
-php artisan db:seed --class=ThailandAddressSeeder
-```
-
 ## Usage
-You can use available models for thai address tables
+###  Eloquent models events log
+For you to easy log your eloquent model activities when `created`, `updated`, `deleted`.
+
+After you setting up the package then add `ModelEventActivity` Trait to your model.
 
 ```php
-use Uatthaphon\ThaiAddress\Models\ThailandProvince;
-use Uatthaphon\ThaiAddress\Models\ThailandDistrict;
-use Uatthaphon\ThaiAddress\Models\ThailandSubdistrict;
+<?php
+
+namespace App\Models;
 
 ...
+use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 
-/**
- * Available Relationships
- */
+class ToLogged extends Model
+{
+    use ModelEventActivity;
+    ...
+}
 
-// list all districts under the province
-app(ThailandProvince::class)->find(1)->districts()->get();
-
-// get province of the district
-app(ThailandDistrict::class)->find(1)->province;
-// list all sub districtes under the district
-app(ThailandDistrict::class)->find(1)->subdistricts()->get();
-
-// get district of the subdistrict
-app(ThailandSubdistrict::class)->find(1)->district;
-// get province of the subdistrict
-app(ThailandSubdistrict::class)->find(1)->province;
 ```
 
-## Credits
 
-This project wouldn't exist without the awesome database source by [aaronamm/thai-administrative-division-province-district-subdistrict-sql](https://github.com/aaronamm/thai-administrative-division-province-district-subdistrict-sql)
+This feature will record only changes in your application by setting `protected static $loggable` to tell the logger which attributes should be logs.
+
+**Note: this feature will log only changed record from setting fields in $loggable**
+
+```php
+...
+use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
+
+class ToLogged extends Model
+{
+    use ModelEventActivity;
+
+    protected static $loggable = ['title', 'description']
+}
+```
+
+If `title` record changed, It will only log title field in the table `activity_monitors`
+```
+{"title": "has some change"}
+```
+
+We can cutomize which eloquent event should be log by `protected static $eventsToLog` in the example below only `created` event for this model will be logged
+
+```php
+...
+use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
+
+class ToLogged extends Model
+{
+    use ModelEventActivity;
+
+    protected static $eventsToLog = ['created']
+}
+```
