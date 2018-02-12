@@ -24,13 +24,13 @@ Before Laravel 5.5, add package's service provider to your project's `config/app
 ```
 
 
-Run publishing get the database migration
+Run publishing get the database migration for table `activity_monitors`
 
 ```bash
 php artisan vendor:publish --tag=migrations
 ```
 
-After all has been published you can create tables by running the migrations
+After all has been published you can create table by running the migrations
 
 ```bash
 php artisan migrate
@@ -61,7 +61,7 @@ class ToLogged extends Model
 
 This feature will record only changes in your application by setting `protected static $loggable` to tell the logger which attributes should be logs.
 
-**Note: this feature will log only changed record from setting fields in $loggable**
+**Note: this feature will log only changed record from setting fields in `$loggable`**
 
 ```php
 ...
@@ -80,7 +80,9 @@ If `title` record changed, It will only log title field in the table `activity_m
 {"title": "has some change"}
 ```
 
-We can cutomize which eloquent event should be log by `protected static $eventsToLog` in the example below only `created` event for this model will be logged
+We can cutomize which eloquent event should be log by `protected static $eventsToLog`. 
+
+In the example below only `created` event for this model will be logged
 
 ```php
 ...
