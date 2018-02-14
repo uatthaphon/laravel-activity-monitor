@@ -41,7 +41,11 @@
         "laravel": {
             "providers": [
                 "Uatthaphon\\ActivityMonitor\\ActivityMonitorServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "AMLog": "Uatthaphon\\ActivityMonitor\\Facades\\ActivityMonitorLog",
+                "AMView": "Uatthaphon\\ActivityMonitor\\Facades\\ActivityMonitorView",
+            }
         }
     }
 }

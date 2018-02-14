@@ -3,7 +3,9 @@
 namespace Uatthaphon\ActivityMonitor;
 
 use Illuminate\Support\ServiceProvider;
-use Uatthaphon\ActivityMonitor\ActivityMonitor;
+use Illuminate\Support\Facades\Log;
+use Uatthaphon\ActivityMonitor\Transformers\ActivityMonitorViewTransformer;
+use Uatthaphon\ActivityMonitor\Transformers\ActivityMonitorViewTransformerInterface;
 
 class ActivityMonitorServiceProvider extends ServiceProvider
 {
@@ -24,9 +26,26 @@ class ActivityMonitorServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        /**
+         * publish migrations
+         */
         $this->publishes([
             __DIR__ . '/database/migrations' => database_path('migrations')
         ], 'migrations');
+
+        /**
+         * Register Facade
+         */
+        $this->app->bind('ActivityMonitorLog', ActivityMonitorLog::class);
+        $this->app->bind('ActivityMonitorView', ActivityMonitorView::class);
+
+        /**
+         * Register Service Provider Interface
+         */
+        $this->app->bind(
+            ActivityMonitorViewTransformerInterface::class,
+            ActivityMonitorViewTransformer::class
+        );
     }
 
     /**
@@ -36,6 +55,6 @@ class ActivityMonitorServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['ActivityMonitor'];
+        return ['ActivityMonitorLog', 'ActivityMonitorView'];
     }
 }

@@ -156,4 +156,9 @@ class ActivityMonitorLog
 
         return $activityMonitor;
     }
+
+    public function test()
+    {
+        return 'test function';
+    }
 }
