@@ -22,12 +22,6 @@ class ActivityMonitor extends Model
         return $this->morphTo();
     }
 
-    public function getMetaData($key)
-    {
-        return array_get($this->meta->get(), $key, null);
-    }
-
-
     public function setTracesAttribute($value)
     {
         $this->attributes['traces'] = empty(array_filter($value)) ? null :json_encode($value);
@@ -48,10 +42,13 @@ class ActivityMonitor extends Model
         return collect(json_decode($value, true));
     }
 
-    public function scopeInLogName($query, $logNames)
+    public function scopeLogName($query, $logName)
     {
-        $logNames = is_array($logNames) ? $logNames : func_get_args();
+        return $query->where('log_name', $logName);
+    }
 
+    public function scopeInLogNames($query, $logNames)
+    {
         return $query->whereIn('log_name', $logNames);
     }
 

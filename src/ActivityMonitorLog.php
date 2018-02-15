@@ -9,6 +9,12 @@ use Uatthaphon\ActivityMonitor\Models\ActivityMonitor;
 
 class ActivityMonitorLog
 {
+    const DEBUG = 'debug';
+    const ERROR = 'error';
+    const FATAL = 'fatal';
+    const INFO = 'info';
+    const WARNING = 'warning';
+
     /** @var boolean enabeled/Disable log */
     protected $enabled;
 
@@ -69,35 +75,35 @@ class ActivityMonitorLog
 
     public function debug($description)
     {
-        $this->defineLogName('debug', $description);
+        $this->defineLogName(self::DEBUG, $description);
 
         return $this;
     }
 
     public function error($description)
     {
-        $this->defineLogName('error', $description);
+        $this->defineLogName(self::ERROR, $description);
 
         return $this;
     }
 
     public function fatal($description)
     {
-        $this->defineLogName('fatal', $description);
+        $this->defineLogName(self::FATAL, $description);
 
         return $this;
     }
 
     public function info($description)
     {
-        $this->defineLogName('info', $description);
+        $this->defineLogName(self::INFO, $description);
 
         return $this;
     }
 
     public function warning($description)
     {
-        $this->defineLogName('warning', $description);
+        $this->defineLogName(self::WARNING, $description);
 
         return $this;
     }

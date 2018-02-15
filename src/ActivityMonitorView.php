@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Uatthaphon\ActivityMonitor\ActivityMonitorLog as AMLog;
 use Uatthaphon\ActivityMonitor\Models\ActivityMonitor;
 use Uatthaphon\ActivityMonitor\Transformers\ActivityMonitorViewTransformerInterface;
+
 class ActivityMonitorView
 {
     protected $activityMonitortransformer;
@@ -16,11 +18,13 @@ class ActivityMonitorView
 
     protected $logName;
 
+    protected $logNames = null;
+
     protected $limit = null;
 
     protected $sortBy = 'asc';
 
-    protected $buildable = ['limit', 'sort'];
+    protected $buildable = ['logName', 'inLogName', 'limit', 'sort'];
 
     public function __construct()
     {
@@ -31,6 +35,52 @@ class ActivityMonitorView
     public function logName($logName)
     {
         $this->logName = $logName;
+
+        $this->logNames = null;
+
+        return $this;
+    }
+
+    public function inLogName($logNames)
+    {
+        $this->logNames = is_array($logNames) ? $with : func_get_args();
+
+        $this->logName = null;
+
+        return $this;
+    }
+
+    public function debug($description)
+    {
+        $this->logName(AMLog::DEBUG);
+
+        return $this;
+    }
+
+    public function error($description)
+    {
+        $this->logName(AMLog::ERROR);
+
+        return $this;
+    }
+
+    public function fatal($description)
+    {
+        $this->logName(AMLog::FATAL);
+
+        return $this;
+    }
+
+    public function info($description)
+    {
+        $this->logName(AMLog::INFO);
+
+        return $this;
+    }
+
+    public function warning($description)
+    {
+        $this->logName(AMLog::WARNING);
 
         return $this;
     }
@@ -112,6 +162,16 @@ class ActivityMonitorView
     protected function filterSortOrder($sortOrder)
     {
         return in_array($sortOrder, ['asc', 'desc']) ? $sortOrder : 'asc';
+    }
+
+    protected function applyLogName(Builder $builder)
+    {
+        return ($this->logName) ? $builder->logName($this->logName) : null;
+    }
+
+    protected function applyInLogName(Builder $builder)
+    {
+        return ($this->logNames) ? $builder->inLogNames($this->logNames) : null;
     }
 
     protected function applyLimit(Builder $builder)

@@ -13,7 +13,7 @@ trait LogTracesModelEvent
     /**
      * Add history data ot oldData if updated allowed
      */
-    protected static function bootLogHistoryModelEvent()
+    protected static function bootLogTracesModelEvent()
     {
         foreach (static::getModelEvents() as $eventName) {
             if ($eventName == 'updated') {
@@ -35,7 +35,7 @@ trait LogTracesModelEvent
             return null;
         }
 
-        $traces = array_only($model->log_name, static::$loggable);
+        $traces = array_only($model->attributes, static::$loggable);
 
         if (isset(static::$oldData)) {
             $traces = array_diff(static::$oldData, $traces);
@@ -50,8 +50,8 @@ trait LogTracesModelEvent
             return true;
         }
 
-        if (isset(static::$oldData) && !empty(static::$oldData)) {
-            $traces = array_only($model->log_name, static::$loggable);
+        if (isset(static::$oldData)) {
+            $traces = array_only($model->attributes, static::$loggable);
 
             return !empty(array_filter(array_diff($traces, static::$oldData)));
         }
