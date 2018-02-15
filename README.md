@@ -56,7 +56,7 @@ $post->body = 'update body content';
 $post->save();
 
 AMLog::logName('custom log name')               // Declare log name
-    ->description('user updated post content')  // Log description 
+    ->description('user updated post content')  // Log description
     ->happenTo($post)                           // Model of the event happen to
     ->actBy(\Auth::user())                      // Model that cause this event
     ->meta(['key'=>'value'])                    // Additional pieces of information
@@ -122,7 +122,7 @@ If `title` record changed, It will only log title field in the table `activity_m
 {"title": "has some change"}
 ```
 
-We can cutomize which eloquent event should be log by `protected static $eventsToLog`. 
+We can cutomize which eloquent event should be log by `protected static $eventsToLog`.
 
 In the example below only `created` event for this model will be logged
 
@@ -147,11 +147,11 @@ use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 class ToBelog extends Model
 {
     use ModelEventActivity;
-    
+
     protected static $createdEventMeta = ['create key' => 'create value'];
-    
+
     protected static $updatedEventMeta = ['update key' => 'update value'];
-    
+
     protected static $deletedEventMeta = ['deletd key' => 'delete value'];
 
     ...
@@ -178,7 +178,7 @@ AMView::logName('your_log_name')                  // get by log name
     ->limit(5)                                    // limit resutls
     ->sortBy('desc')                              // sort By desc or asc
     ->get();
-    
+
 // Get from multiple log names
 AMView::inLogName('info', 'updated')->get();
 AMView::inLogName(['info', 'updated'])->get();    // use array or multiple variables
@@ -197,7 +197,7 @@ AMView::warning()->all();
 ...
 ```
 
-try and see it return collection of `ActivityMonitor` that you can access 
+try and see it return collection of `ActivityMonitor` that you can access
 
 ```php
 use AMView;
@@ -212,13 +212,13 @@ $am->agent;                             // Get user browser agent
 $am->ip;                                // Get user ip address
 
 $traces = $am->traces;                  // Get traces
-// if $traces not null then you can access its
+
 foreach ($traces as $key => $value) {
     // do something
 }
 
 $meta = $am->meta;                      // Get you custom meta data
-// if $meta not null then you can access its
+
 foreach ($meta as $key => $value) {
     // do something
 }
