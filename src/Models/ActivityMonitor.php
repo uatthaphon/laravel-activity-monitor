@@ -29,7 +29,7 @@ class ActivityMonitor extends Model
 
     public function getTracesAttribute($value)
     {
-        return collect(json_decode($value, true));
+        return empty($value) ? null : collect(json_decode($value, true));
     }
 
     public function setMetaAttribute($value)
@@ -39,7 +39,7 @@ class ActivityMonitor extends Model
 
     public function getMetaAttribute($value)
     {
-        return collect(json_decode($value, true));
+        return empty($value) ? null : collect(json_decode($value, true));
     }
 
     public function scopeLogName($query, $logName)

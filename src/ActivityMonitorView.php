@@ -24,7 +24,7 @@ class ActivityMonitorView
 
     protected $sortBy = 'asc';
 
-    protected $buildable = ['logName', 'inLogName', 'limit', 'sort'];
+    protected $buildable = ['logName', 'inLogName', 'limit', 'sortBy'];
 
     public function __construct()
     {
@@ -43,42 +43,42 @@ class ActivityMonitorView
 
     public function inLogName($logNames)
     {
-        $this->logNames = is_array($logNames) ? $with : func_get_args();
+        $this->logNames = is_array($logNames) ? $logNames : func_get_args();
 
         $this->logName = null;
 
         return $this;
     }
 
-    public function debug($description)
+    public function debug()
     {
         $this->logName(AMLog::DEBUG);
 
         return $this;
     }
 
-    public function error($description)
+    public function error()
     {
         $this->logName(AMLog::ERROR);
 
         return $this;
     }
 
-    public function fatal($description)
+    public function fatal()
     {
         $this->logName(AMLog::FATAL);
 
         return $this;
     }
 
-    public function info($description)
+    public function info()
     {
         $this->logName(AMLog::INFO);
 
         return $this;
     }
 
-    public function warning($description)
+    public function warning()
     {
         $this->logName(AMLog::WARNING);
 
@@ -179,7 +179,7 @@ class ActivityMonitorView
         return (!is_null($this->limit)) ? $builder->take($this->limit) : $builder;
     }
 
-    protected function applySort(Builder $builder)
+    protected function applySortBy(Builder $builder)
     {
         return $builder->orderBy('id', $this->sortBy);
     }
