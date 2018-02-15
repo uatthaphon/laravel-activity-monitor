@@ -48,11 +48,13 @@ or if you use Laravel 5.5 or above, it will automatic add this 2 aliases.
 
 for example log the user updated their post.
 ```php
+use AMLog;
+
 $post = Post::where('user_id, $id)->firstOrFail();
 $post->body = 'update body content';
 $post->save();
 
-\AMLog::logName('custom log name')              // Declare log name
+AMLog::logName('custom log name')              // Declare log name
     ->description('user updated post content')  // Log description
     ->happenTo($post)                           // Model of the event happen to
     ->actBy(\Auth::user())                      // Model that cause this event
@@ -63,9 +65,13 @@ AMlog also prepared some of the log name for us to easily use => `debug`, `error
 
 ```php
 AMLog::debug('some debug description')->save();
+
 AMLog::error('some error description')->save();
+
 AMLog::fatal('some fatal description')->save();
+
 AMLog::info('some info description')->save();
+
 AMLog::warning('some warning description')->save();
 ```
 That's it :notes:
@@ -83,7 +89,7 @@ namespace App\Models;
 ...
 use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 
-class ToLogged extends Model
+class ToBeLog extends Model
 {
     use ModelEventActivity;
     ...
@@ -94,13 +100,13 @@ class ToLogged extends Model
 
 This feature will record only changes in your application by setting `protected static $loggable` to tell the logger which attributes should be logs.
 
-**Note: this feature will log only changed record from setting attributes in `$loggable`, and one last thing it will not log attribute that use database default value... Except you add value to the attribute**
+**Note: it will not log attribute that use database default value... Except you add value to the attribute**
 
 ```php
 ...
 use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 
-class ToLogged extends Model
+class ToBeLog extends Model
 {
     use ModelEventActivity;
 
@@ -121,7 +127,7 @@ In the example below only `created` event for this model will be logged
 ...
 use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 
-class ToLogged extends Model
+class ToBeLog extends Model
 {
     use ModelEventActivity;
 
@@ -135,11 +141,14 @@ We can add our meta data to each event by add this to yout model
 ...
 use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 
-class ToLogged extends Model
+class ToBeLog extends Model
 {
     use ModelEventActivity;
+    
     protected static $createdEventMeta = ['create key' => 'create value'];
+    
     protected static $updatedEventMeta = ['update key' => 'update value'];
+    
     protected static $deletedEventMeta = ['deletd key' => 'delete value'];
 ```
 
