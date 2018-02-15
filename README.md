@@ -1,11 +1,6 @@
 # laravel-activity-mornitor
 Activity Monitor Log is an activity logger for monitoring user activity and eloquent models events activity.
 
-> ** **Still In Development** *If you would like to try or love to taking a risk please use this repo now* :speak_no_evil::see_no_evil::hear_no_evil:
-> *Note:*
-> *[1] Right now it only tested on laravel 5.5*
-> *[2] Only Eloquent model events feature tested.*
-
 ## Setup
 Add package dependency to your project
 
@@ -61,7 +56,7 @@ $post->save();
     ->description('user updated post content')  // Log description
     ->happenTo($post)                           // Model of the event happen to
     ->actBy(\Auth::user())                      // Model that cause this event
-    ->meta(['key'=>'value])                     // Additional pieces of information
+    ->meta(['key'=>'value'])                    // Additional pieces of information
     ->save();                                   // Let's Save the log
 ```
 AMlog also prepared some of the log name for us to easily use => `debug`, `error`, `fatal`, `info`, `warning`
