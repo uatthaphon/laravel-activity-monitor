@@ -55,11 +55,11 @@ $post = Post::where('user_id', $id)->firstOrFail();
 $post->body = 'update body content';
 $post->save();
 
-AMLog::logName('custom log name')              // Declare log name
+AMLog::logName('custom log name')               // Declare log name
     ->description('user updated post content')  // Log description 
     ->happenTo($post)                           // Model of the event happen to
     ->actBy(\Auth::user())                      // Model that cause this event
-    ->meta(['key'=>'value'])                     // Additional pieces of information
+    ->meta(['key'=>'value'])                    // Additional pieces of information
     ->save();                                   // Let's Save the log
 ```
 AMlog also prepared some of the log name for us to easily use => `debug`, `error`, `fatal`, `info`, `warning`
@@ -147,11 +147,15 @@ use Uatthaphon\ActivityMonitor\Traits\ModelEventActivity;
 class ToBelog extends Model
 {
     use ModelEventActivity;
+    
     protected static $createdEventMeta = ['create key' => 'create value'];
     
     protected static $updatedEventMeta = ['update key' => 'update value'];
     
     protected static $deletedEventMeta = ['deletd key' => 'delete value'];
+
+    ...
+}
 ```
 
 ## View Logs
@@ -163,14 +167,16 @@ See this example below
 ```php
 use AMView;
 
+...
+
 // Get all
-AMView::all();      // get all the logs
-AMView::get();      // also act the same as all()
+AMView::all();                                    // get all the logs
+AMView::get();                                    // also act the same as all()
 
 // With conditions
-AMView::logName('your_log_name')        // get by log name
-    ->limit(5)                          // limit resutls
-    ->sortBy('desc')                    // sort By desc or asc
+AMView::logName('your_log_name')                  // get by log name
+    ->limit(5)                                    // limit resutls
+    ->sortBy('desc')                              // sort By desc or asc
     ->get();
     
 // Get from multiple log names
@@ -187,21 +193,25 @@ AMView::fatal()->all();
 AMView::info()->all();
 
 AMView::warning()->all();
+
+...
 ```
 
 try and see it return collection of `ActivityMonitor` that you can access 
 
-```
+```php
 use AMView;
+
+...
 
 $am = AMView::info()->all()->last();
 
-$am->log_name;                  // Get log name
-$am->description;               // Get description
-$am->agent;                     // Get user browser agent
-$am->ip;                        // Get user ip address
+$am->log_name;                          // Get log name
+$am->description;                       // Get description
+$am->agent;                             // Get user browser agent
+$am->ip;                                // Get user ip address
 
-$traces = $am->traces;          // Get traces
+$traces = $am->traces;                  // Get traces
 // if $traces not null then you can access its
 foreach ($traces as $key => $value) {
     // do something
@@ -212,6 +222,8 @@ $meta = $am->meta;                      // Get you custom meta data
 foreach ($meta as $key => $value) {
     // do something
 }
+
+...
 ```
 
 
