@@ -18,11 +18,11 @@ class CreateActivityMonitorsTable extends Migration
             $table->increments('id');
             $table->string('log_name')->nullable();
             $table->text('description');
-            $table->integer('event_id')->nullable();
-            $table->string('event_type')->nullable();
-            $table->integer('by_id')->nullable();
-            $table->string('by_type')->nullable();
-            $table->text('history')->nullable();
+            $table->integer('happen_to_id')->nullable();
+            $table->string('happen_to_type')->nullable();
+            $table->integer('act_by_id')->nullable();
+            $table->string('act_by_type')->nullable();
+            $table->text('traces')->nullable();
             $table->text('meta')->nullable();
             $table->string('agent')->nullable();
             $table->string('ip');

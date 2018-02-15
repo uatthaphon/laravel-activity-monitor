@@ -18,14 +18,14 @@ class ActivityMonitorLog
     /** @var string [description] */
     protected $description = '';
 
-    /** @var \Illuminate\Database\Eloquent\Model event happened to ... */
-    protected $event;
+    /** @var \Illuminate\Database\Eloquent\Model event happen to ... */
+    protected $happenTo;
 
     /** @var \Illuminate\Database\Eloquent\Model event caused by ... */
-    protected $by;
+    protected $actBy;
 
     /** @var array keep changes of medel events */
-    protected $history = [];
+    protected $traces = [];
 
     /** @var array additional infomation */
     protected $meta = [];
@@ -56,6 +56,52 @@ class ActivityMonitorLog
         return $this;
     }
 
+    private function defineLogName($logName, $description)
+    {
+        $this->logName($logName);
+
+        if ($description) {
+            $this->description($description);
+        }
+
+        return $this;
+    }
+
+    public function debug($description)
+    {
+        $this->defineLogName('debug', $description);
+
+        return $this;
+    }
+
+    public function error($description)
+    {
+        $this->defineLogName('error', $description);
+
+        return $this;
+    }
+
+    public function fatal($description)
+    {
+        $this->defineLogName('fatal', $description);
+
+        return $this;
+    }
+
+    public function info($description)
+    {
+        $this->defineLogName('info', $description);
+
+        return $this;
+    }
+
+    public function warning($description)
+    {
+        $this->defineLogName('warning', $description);
+
+        return $this;
+    }
+
     public function description($description)
     {
         $this->description = $description;
@@ -63,23 +109,23 @@ class ActivityMonitorLog
         return $this;
     }
 
-    public function on(Model $model)
+    public function happenTo(Model $model)
     {
-        $this->event = $model;
+        $this->happenTo = $model;
 
         return $this;
     }
 
-    public function by(Model $model)
+    public function actBy(Model $model)
     {
-        $this->by = $model;
+        $this->actBy = $model;
 
         return $this;
     }
 
-    public function history(array $history)
+    public function traces(array $traces)
     {
-        $this->history = $history;
+        $this->traces = $traces;
 
         return $this;
     }
@@ -132,17 +178,17 @@ class ActivityMonitorLog
 
         $activityMonitor = new ActivityMonitor;
 
-        if ($this->event) {
-            $activityMonitor->event()->associate($this->event);
+        if ($this->happenTo) {
+            $activityMonitor->happenTo()->associate($this->happenTo);
         }
 
-        if ($this->by) {
-            $activityMonitor->by()->associate($this->by);
+        if ($this->actBy) {
+            $activityMonitor->actBy()->associate($this->actBy);
         }
 
         $activityMonitor->log_name = $this->logName;
 
-        $activityMonitor->history = $this->history;
+        $activityMonitor->traces = $this->traces;
 
         $activityMonitor->meta = $this->meta;
 
@@ -155,10 +201,5 @@ class ActivityMonitorLog
         $activityMonitor->save();
 
         return $activityMonitor;
-    }
-
-    public function test()
-    {
-        return 'test function';
     }
 }

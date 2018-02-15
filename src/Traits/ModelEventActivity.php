@@ -5,13 +5,13 @@ namespace Uatthaphon\ActivityMonitor\Traits;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
 use Uatthaphon\ActivityMonitor\ActivityMonitorLog;
-use Uatthaphon\ActivityMonitor\Traits\LogHistoryModelEvent;
+use Uatthaphon\ActivityMonitor\Traits\LogTracesModelEvent;
 
 trait ModelEventActivity
 {
-    use LogHistoryModelEvent;
+    use LogTracesModelEvent;
 
-    private static $description = 'Eloquent models event';
+    private static $description = 'eloquent models event';
 
     protected static function bootModelEventActivity()
     {
@@ -21,15 +21,16 @@ trait ModelEventActivity
                     return;
                 }
 
-                if (!static::isSomeChange($model)) {
+                if (!static::isSomeChangeOnModelByEvent($model, $eventName)) {
                     return;
                 }
 
                 app(ActivityMonitorLog::class)
                     ->logName($eventName)
                     ->description(static::$description)
-                    ->on($model)
-                    ->history(static::perpareHistory($model, $eventName))
+                    ->happenTo($model)
+                    ->traces(static::perpareTraces($model, $eventName))
+                    ->meta(static::prepareMeta($eventName))
                     ->save();
             });
         }
@@ -57,5 +58,18 @@ trait ModelEventActivity
         }
 
         return true;
+    }
+
+    protected static function prepareMeta($eventName)
+    {
+        if (isset(static::$createdEventMeta) && $eventName == 'created') {
+            return static::$createdEventMeta;
+        } elseif (isset(static::$updatedEventMeta) && $eventName == 'updated') {
+            return static::$updatedEventMeta;
+        } elseif (isset(static::$deletedEventMeta) && $eventName == 'deleted') {
+            return static::$deletedEventMeta;
+        }
+
+        return null;
     }
 }

@@ -12,12 +12,12 @@ class ActivityMonitor extends Model
         'meta' => 'collection',
     ];
 
-    public function event()
+    public function happenTo()
     {
         return $this->morphTo();
     }
 
-    public function by()
+    public function actBy()
     {
         return $this->morphTo();
     }
@@ -28,12 +28,12 @@ class ActivityMonitor extends Model
     }
 
 
-    public function setHistoryAttribute($value)
+    public function setTracesAttribute($value)
     {
-        $this->attributes['history'] = empty(array_filter($value)) ? null :json_encode($value);
+        $this->attributes['traces'] = empty(array_filter($value)) ? null :json_encode($value);
     }
 
-    public function getHistoryAttribute($value)
+    public function getTracesAttribute($value)
     {
         return collect(json_decode($value, true));
     }
@@ -48,24 +48,24 @@ class ActivityMonitor extends Model
         return collect(json_decode($value, true));
     }
 
-    public function scopeInAttribute($query, $attributes)
+    public function scopeInLogName($query, $logNames)
     {
-        $attributes = is_array($attributes) ? $attributes : func_get_args();
+        $logNames = is_array($logNames) ? $logNames : func_get_args();
 
-        return $query->whereIn('attribute', $attributes);
+        return $query->whereIn('log_name', $logNames);
     }
 
-    public function scopeByBy($query, Model $by)
+    public function scopeHappenTo($query, Model $model)
     {
         return $qeury
-            ->where('by_type', $by->getMorphClass())
-            ->where('by_id', $by->getKey());
+            ->where('happen_to_type', $model->getMorphClass())
+            ->where('happen_to_id', $model->getKey());
     }
 
-    public function scopeForEvent($query, Model $event)
+    public function scopeActBy($query, Model $model)
     {
         return $qeury
-            ->where('event_type', $event->getMorphClass())
-            ->where('event_id', $event->getKey());
+            ->where('act_by_type', $model->getMorphClass())
+            ->where('act_by_id', $model->getKey());
     }
 }
