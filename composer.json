@@ -44,7 +44,7 @@
             ],
             "aliases": {
                 "AMLog": "Uatthaphon\\ActivityMonitor\\Facades\\ActivityMonitorLog",
-                "AMView": "Uatthaphon\\ActivityMonitor\\Facades\\ActivityMonitorView",
+                "AMView": "Uatthaphon\\ActivityMonitor\\Facades\\ActivityMonitorView"
             }
         }
     }
