@@ -1,32 +1,24 @@
 # laravel-activity-mornitor
 Activity Monitor Log is an activity logger for monitoring user activity and eloquent models events activity.
 
+**Note:** This package use laravel 5.5+ it require php 7.0+
 
 ## Setup
 Add package dependency to your project
 
 ```bash
-composer require uatthaphon/laravel-activity-mornitor
+composer require uatthaphon/laravel-activity-monitor
 ```
+As the package build for laravel 5.5+, I use [Auto-Discovery](https://laravel-news.com/package-auto-discovery) 
+so we don't need to add service provider in `config\app.php` anymore
 
-Before Laravel 5.5, add package's service provider to your project's `config/app.php`
-
-```php
-'providers' => [
-  ...
-
-  Uatthaphon\ActivityMonitor\ActivityMonitorServiceProvider::class,
-],
-```
-
-
-Run publishing get the database migration for table `activity_monitors`
+Run publishing to get the database migration for table `activity_monitors`
 
 ```bash
 php artisan vendor:publish --tag=migrations
 ```
 
-After all has been published you can create table by running the migrations
+After published, we can create table by running the migrations
 
 ```bash
 php artisan migrate
@@ -35,19 +27,12 @@ php artisan migrate
 ## Usage
 
 ### Logger
-Easy to use after you declear aliases in `config/app.php`
+This package have 2 aliases `AMLog` and `AMView` for us to easily use to save the log and view the logs.
 
-```php
-'aliases' => [
-    ...
-    'AMLog' => Uatthaphon\ActivityMonitor\Facades\ActivityMonitorLog::class,
-    'AMView' => Uatthaphon\ActivityMonitor\Facades\ActivityMonitorView::class,
-]
-```
+We don't need to add those 2 aliases to `config/app.php` neither. 
+It already added for us by [Auto-Discovery](https://laravel-news.com/package-auto-discovery).
 
-Or if you use Laravel 5.5 or above, it will automatic add this 2 aliases.
-
-For example, log the user updated their post.
+Example, log the user updated their post.
 ```php
 use AMLog;
 
@@ -203,7 +188,7 @@ AMView::warning()->all();
 ...
 ```
 
-Try and see it return collection of `ActivityMonitor` model
+Try and see. It will return collection of `ActivityMonitor` model
 
 ```php
 use AMView;
