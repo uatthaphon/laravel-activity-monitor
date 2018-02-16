@@ -1,8 +1,10 @@
 <?php
+
 namespace Uatthaphon\ActivityMonitor\Models;
 
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Uatthaphon\ActivityMonitor\Enums\LogLevel as LogLevelEnums;
 
 class ActivityMonitor extends Model
 {
@@ -44,7 +46,7 @@ class ActivityMonitor extends Model
 
     public function scopeLogName($query, $logName)
     {
-        return $query->where('log_name', $logName);
+        return $query->where('log_name', $logNames);
     }
 
     public function scopeInLogNames($query, $logNames)
@@ -54,15 +56,40 @@ class ActivityMonitor extends Model
 
     public function scopeHappenTo($query, Model $model)
     {
-        return $qeury
+        return $query
             ->where('happen_to_type', $model->getMorphClass())
             ->where('happen_to_id', $model->getKey());
     }
 
     public function scopeActBy($query, Model $model)
     {
-        return $qeury
+        return $query
             ->where('act_by_type', $model->getMorphClass())
             ->where('act_by_id', $model->getKey());
+    }
+
+    public function scopeDebug($query)
+    {
+        return $query->where('log_name', LogLevelEnums::DEBUG);
+    }
+
+    public function scopeError($query)
+    {
+        return $query->where('log_name', LogLevelEnums::ERROR);
+    }
+
+    public function scopeFatal($query)
+    {
+        return $query->where('log_name', LogLevelEnums::FATAL);
+    }
+
+    public function scopeInfo($query)
+    {
+        return $query->where('log_name', LogLevelEnums::INFO);
+    }
+
+    public function scopeWarning($query)
+    {
+        return $query->where('log_name', LogLevelEnums::WARNING);
     }
 }

@@ -5,15 +5,11 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Uatthaphon\ActivityMonitor\Enums\LogLevel as LogLevelEnums;
 use Uatthaphon\ActivityMonitor\Models\ActivityMonitor;
 
 class ActivityMonitorLog
 {
-    const DEBUG = 'debug';
-    const ERROR = 'error';
-    const FATAL = 'fatal';
-    const INFO = 'info';
-    const WARNING = 'warning';
 
     /** @var boolean enabeled/Disable log */
     protected $enabled;
@@ -75,35 +71,35 @@ class ActivityMonitorLog
 
     public function debug($description)
     {
-        $this->defineLogName(self::DEBUG, $description);
+        $this->defineLogName(LogLevelEnums::DEBUG, $description);
 
         return $this;
     }
 
     public function error($description)
     {
-        $this->defineLogName(self::ERROR, $description);
+        $this->defineLogName(LogLevelEnums::ERROR, $description);
 
         return $this;
     }
 
     public function fatal($description)
     {
-        $this->defineLogName(self::FATAL, $description);
+        $this->defineLogName(LogLevelEnums::FATAL, $description);
 
         return $this;
     }
 
     public function info($description)
     {
-        $this->defineLogName(self::INFO, $description);
+        $this->defineLogName(LogLevelEnums::INFO, $description);
 
         return $this;
     }
 
     public function warning($description)
     {
-        $this->defineLogName(self::WARNING, $description);
+        $this->defineLogName(LogLevelEnums::WARNING, $description);
 
         return $this;
     }

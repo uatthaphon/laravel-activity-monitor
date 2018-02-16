@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Uatthaphon\ActivityMonitor\ActivityMonitorLog as AMLog;
+use Uatthaphon\ActivityMonitor\Enums\LogLevel as LogLevelEnums;
 use Uatthaphon\ActivityMonitor\Models\ActivityMonitor;
 use Uatthaphon\ActivityMonitor\Transformers\ActivityMonitorViewTransformerInterface;
 
@@ -18,13 +18,15 @@ class ActivityMonitorView
 
     protected $logName;
 
-    protected $logNames = null;
+    protected $happenTo;
+
+    protected $actBy;
 
     protected $limit = null;
 
     protected $sortBy = 'asc';
 
-    protected $buildable = ['logName', 'inLogName', 'limit', 'sortBy'];
+    protected $buildable = ['logName', 'happenTo', 'actBy', 'limit', 'sortBy'];
 
     public function __construct()
     {
@@ -34,53 +36,56 @@ class ActivityMonitorView
 
     public function logName($logName)
     {
-        $this->logName = $logName;
-
-        $this->logNames = null;
-
-        return $this;
-    }
-
-    public function inLogName($logNames)
-    {
-        $this->logNames = is_array($logNames) ? $logNames : func_get_args();
-
-        $this->logName = null;
+        $this->logName = is_array($logName) ? $logName : func_get_args();
 
         return $this;
     }
 
     public function debug()
     {
-        $this->logName(AMLog::DEBUG);
+        $this->logName(LogLevelEnums::DEBUG);
 
         return $this;
     }
 
     public function error()
     {
-        $this->logName(AMLog::ERROR);
+        $this->logName(LogLevelEnums::ERROR);
 
         return $this;
     }
 
     public function fatal()
     {
-        $this->logName(AMLog::FATAL);
+        $this->logName(LogLevelEnums::FATAL);
 
         return $this;
     }
 
     public function info()
     {
-        $this->logName(AMLog::INFO);
+        $this->logName(LogLevelEnums::INFO);
 
         return $this;
     }
 
     public function warning()
     {
-        $this->logName(AMLog::WARNING);
+        $this->logName(LogLevelEnums::WARNING);
+
+        return $this;
+    }
+
+    public function happenTo(Model $happenTo)
+    {
+        $this->happenTo = $happenTo;
+
+        return $this;
+    }
+
+    public function actBy(Model $actBy)
+    {
+        $this->actBy = $actBy;
 
         return $this;
     }
@@ -166,12 +171,17 @@ class ActivityMonitorView
 
     protected function applyLogName(Builder $builder)
     {
-        return ($this->logName) ? $builder->logName($this->logName) : null;
+        return ($this->logName) ? $builder->inLogNames($this->logName) : null;
     }
 
-    protected function applyInLogName(Builder $builder)
+    protected function applyHappenTo(Builder $builder)
     {
-        return ($this->logNames) ? $builder->inLogNames($this->logNames) : null;
+        return ($this->happenTo) ? $builder->happenTo($this->happenTo) : null;
+    }
+
+    protected function applyActBy(Builder $builder)
+    {
+        return ($this->actBy) ? $builder->actBy($this->actBy) : null;
     }
 
     protected function applyLimit(Builder $builder)
@@ -183,5 +193,4 @@ class ActivityMonitorView
     {
         return $builder->orderBy('id', $this->sortBy);
     }
-
 }

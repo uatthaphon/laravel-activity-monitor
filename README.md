@@ -45,9 +45,9 @@ Easy to use after you declear aliases in `config/app.php`
 ]
 ```
 
-or if you use Laravel 5.5 or above, it will automatic add this 2 aliases.
+Or if you use Laravel 5.5 or above, it will automatic add this 2 aliases.
 
-for example log the user updated their post.
+For example, log the user updated their post.
 ```php
 use AMLog;
 
@@ -103,7 +103,7 @@ class ToBelog extends Model
 
 This feature will record only changes in your application by setting `protected static $loggable` to tell the logger which attributes should be logs.
 
-**Note: It will not log attribute that use database default value... Except you add value to the attribute**
+**Note: It will not log attribute that use database default value... Except you add value to the attribute by your self**
 
 ```php
 ...
@@ -180,8 +180,14 @@ AMView::logName('your_log_name')                  // get by log name
     ->get();
 
 // Get from multiple log names
-AMView::inLogName('info', 'updated')->get();
-AMView::inLogName(['info', 'updated'])->get();    // use array or multiple variables
+AMView::logName('info', 'updated')->get();
+AMView::logName(['info', 'updated'])->get();
+
+
+// Get all specific lastest post log From current user
+$user = \Auth::user();
+$post = $user->post()->last($user);
+AMView::happenTo($post)->ActBy($user)->get();
 
 // Or call from providings log name function
 AMView::debug()->all();
@@ -197,7 +203,7 @@ AMView::warning()->all();
 ...
 ```
 
-try and see it return collection of `ActivityMonitor` that you can access
+Try and see it return collection of `ActivityMonitor` model
 
 ```php
 use AMView;
@@ -226,4 +232,39 @@ foreach ($meta as $key => $value) {
 ...
 ```
 
+## View Log In Specific Model
 
+We can add `ActivityMonitor` to our model
+
+```php
+...
+use Uatthaphon\ActivityMonitor\Traits\ActivityMonitorRelations;
+
+class User extends Authenticatable
+{
+  use ActivityMonitorRelations;
+
+  ...
+}
+```
+
+Now we can use `activity()` polymorphic relations
+
+```php
+// Get all activity records of the current user
+\Auth::user()->activity()->get();
+
+// Retrived with more specific
+// By tell with model record user was interact with
+$user = \Auth::user();
+$user->activity()->happenTo($user->posts()-last())->get();
+
+// Use the providing log name function
+$user->activity()->info()->get();
+
+// Use the providing log name with specific fom model togetter
+$user->activity()
+    ->info()
+    ->happenTo($user->posts()-last())
+    ->get();
+```
