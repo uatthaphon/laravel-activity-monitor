@@ -1,5 +1,5 @@
 {
-    "name": "uatthaphon/laravel-activity-mornitor",
+    "name": "uatthaphon/laravel-activity-monitor",
     "description": "The activity logged to monitor your website",
     "keywords": ["laravel", "log", "monitor", "acitivty"],
     "license": "MIT",
