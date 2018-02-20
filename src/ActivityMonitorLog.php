@@ -146,8 +146,12 @@ class ActivityMonitorLog
         return $this;
     }
 
-    public function metaByArray(array $meta)
+    public function metaByArray($meta)
     {
+        if (empty($meta)) {
+            return $this;
+        }
+
         foreach ($meta as $key => $value) {
             $this->metaByKeyValue($key, $value);
         }
